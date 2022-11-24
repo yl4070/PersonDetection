@@ -1,6 +1,5 @@
 using Flux
 
-
 x = rand(Float32, 1344, 756, 3, 10) |> gpu
 
 m = Chain(Conv((3, 3), 3 => 3, x -> leakyrelu(x, 0.01); stride = 2),

@@ -5,6 +5,7 @@ authors = ["Yang"]
 Augmentor = "02898b10-1f73-11ea-317c-6393d7073e15"
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+FastAI = "5d0beca9-ade8-49ae-ad0b-a3cf890e669f"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
