@@ -1,16 +1,25 @@
-name = "PersonCropping"
-authors = ["Yang"]
+name = "ThreatDection"
+authors = ["Yang", "Sheeraja"]
 
 [deps]
-Augmentor = "02898b10-1f73-11ea-317c-6393d7073e15"
-CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 FastAI = "5d0beca9-ade8-49ae-ad0b-a3cf890e669f"
+FastVision = "7bf02486-ff4c-4e73-b158-40c00866b54f"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+ImageDraw = "4381153b-2b60-58ae-a1ba-fd683676385f"
+ImageSegmentation = "80713f31-8817-5129-9cf8-209ff8fb23e1"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+Metalhead = "dbeba491-748d-5e0e-a39e-b530a07fa0cc"
+ObjectDetector = "3dfc1049-5314-49cf-8447-288dfd02f9fb"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+VideoIO = "d6d074c3-1acf-5d4c-9a43-ef38773959a2"
 
 [compat]
-DrWatson = "2.12.0"
+DrWatson = "2.9.1"
 julia = "1.8.2"
