@@ -157,6 +157,7 @@ end
 
 
 
+
 # ANCHOR training model
 using FastAI, FastVision, Flux, Metalhead
 using Images
@@ -173,12 +174,12 @@ function load_mask(file)
    Images.IndirectArray(imask, ["bg", "person"])
 end
 
-masks = Datasets.loadfolderdata(
+masks = FastAI.Datasets.loadfolderdata(
     labeldir,
     filterfn=FastVision.isimagefile,
 loadfn= f -> load_mask(f))
 
-images = Datasets.loadfolderdata(
+images = FastAI.Datasets.loadfolderdata(
    traindir, 
    filterfn=FastVision.isimagefile,
 loadfn=loadfile)
@@ -189,9 +190,9 @@ image, mask = sample = getobs(data, 1)
 
 
 task = SupervisedTask(
-    (Image{2}(), Mask{2}(classes)),
+    (FastVision.Image{2}(), Mask{2}(classes)),
     (
-      ProjectiveTransforms((128, 128)),
+      ProjectiveTransforms((256, 256)),
       ImagePreprocessing(),
       OneHot()
     )
@@ -199,11 +200,9 @@ task = SupervisedTask(
 
 checkblock(task.blocks.sample, sample)
 
-
 xs, ys = FastAI.makebatch(task, data, 1:3)
 
-
-backbone = Metalhead.ResNet(34).layers[1:end-1]
+backbone = Metalhead.ResNet(18).layers[1:end-1]
 model = taskmodel(task, backbone)
 lossfn = tasklossfn(task)
 
@@ -214,6 +213,29 @@ opt = Adam()
 learner = Learner(model, lossfn; callbacks=[ToGPU()], data = (traindl, validdl), optimizer = opt)
 
 fitonecycle!(learner, 1, 0.033)
+
+
+enc = ImagePreprocessing()
+
+encx = encode(enc, Training(), FastVision.Image{2}(), im)
+
+yhat = m(Flux.unsqueeze(encx, 4) |> gpu)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
