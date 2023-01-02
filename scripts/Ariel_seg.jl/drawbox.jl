@@ -1,6 +1,7 @@
 
 using Images
 using ImageDraw
+using ImageView
 
 function getimgencode(imgname, names = names)
 
@@ -25,7 +26,6 @@ function getimgencode(imgname, names = names)
 
     img, imgx
 end
-
 
 
 function drawbox(model, imgname, xiter = xiter; threshold = .5, names = names)
@@ -66,16 +66,38 @@ function drawbox(model, imgname, xiter = xiter; threshold = .5, names = names)
 end
 
 
+function drawboxView(img, preds::Vector)
 
-drawbox(model, "001")
+    guidict = imshow(img)
+    for pred in preds
+        # draw!(img, Polygon(RectanglePoints(ImageDraw.Point(pred.x, pred.y), ImageDraw.Point(pred.x+pred.w, pred.y+pred.h))), colorant"yellow")
+        annotate!(guidict, AnnotationBox(pred.x, pred.y, pred.x+pred.w, pred.y+pred.h, linewidth=2, color=colorant"yellow"))
+        annotate!(guidict, AnnotationText(pred.x, pred.y+pred.w÷2, string( round(pred.uncern[1]; digits=2) ), color = colorant"red", fontsize = 8))
+    end
+    guidict
+end
+
+
+function drawboxview(model::Chain, imgname::String)
+
+    img, imgx = getimgencode(imgname)
+    preds = getprediction(model, imgx)
+    nonMaxSupression!(preds, .3)
+
+    drawboxView(img, preds)
+end
 
 
 
-img
+drawboxview(model, "002")
+
+
+drawbox(model, "175"; threshold = .5)
+drawbox(model, "001"; threshold = .5)
 
 
 CairoMakie.heatmap(yhat[4][:,:,1,1])
-
 CairoMakie.heatmap(getobs(yiter, 40).mask[:,:,1])
+
 
 
