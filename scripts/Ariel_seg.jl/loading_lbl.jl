@@ -2,6 +2,17 @@
 using Images
 using EzXML
 
+function check_bounds(v)
+    if v <= 0
+        1
+    elseif v >= 256
+        256
+    else
+        v
+    end
+end
+
+
 
 xml_file = raw"D:\training_set\gt\bounding_box\label_me_xml\464.xml"
 
@@ -44,16 +55,6 @@ for xml_file in readdir(dir_path)
         push!(boxes[name], [v, h, vw, hw])
     end
 
-end
-
-function check_bounds(v)
-    if v <= 0
-        1
-    elseif v >= 256
-        256
-    else
-        v
-    end
 end
 
 # ANCHOR End here, code below not used

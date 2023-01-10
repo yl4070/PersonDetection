@@ -2,10 +2,10 @@
 # ANCHOR building blocks
 const act_fn = relu
 
-function convx(ni, nf; ks = 3, stride = 1, ndim = 2)
+function convx(ni, nf, act = identity; ks = 3, stride = 1, ndim = 2)
 
     Conv(ntuple(_ -> ks, ndim),
-         ni => nf,
+         ni => nf, act,
          stride = stride,
          pad = ks ÷ 2,
          init = Flux.kaiming_normal)
@@ -51,10 +51,23 @@ make_down(ni, nf) = Chain(ResBlock(ni, nf; stride = 2), Dropout(.1), ResBlock(nf
 diract(x) = Flux.softplus(x) + 1
 
 function convdirlayer(ni, nf; ks = 3, stride = 1, ndim = 2)
-    bn = BatchNorm(nf, diract) 
+    # bn = BatchNorm(nf, diract) # REVIEW No batchnorm for dir loss
 
-    Chain(convx(ni, nf; ks = ks, stride = stride, ndim = ndim), bn)
+    convx(ni, nf, diract; ks = ks, stride = stride, ndim = ndim)
 end
+
+
+# ANCHOR NIG layer
+function convniglayer(ni, nf; ks = 3, stride = 1, ndim = 2)
+    # bn = BatchNorm(nf, diract) # REVIEW No batchnorm for dir loss
+
+    convx(ni, 4nf, identity; ks = ks, stride = stride, ndim = ndim)
+end
+
+
+
+
+
 
 
 

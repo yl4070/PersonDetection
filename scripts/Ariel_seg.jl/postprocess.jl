@@ -77,3 +77,25 @@ function getprediction(model, imgx)
     detections
 end
 
+
+
+
+# using JSON3
+
+# JSON3.@pretty detections1
+
+# detections = Dict()
+
+# for imgname in rand(names, 10)
+
+#     img, imgx = getimgencode(imgname)
+#     preds = getprediction(model, imgx)
+
+#     detections[imgname] = preds
+# end
+
+# open("detections.json", "w") do io
+#     JSON3.pretty(io, detections)
+# end
+
+
