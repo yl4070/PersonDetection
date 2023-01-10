@@ -58,7 +58,7 @@ end
 expandim(x, d = 3) = Flux.unsqueeze(x, d)
 
 # ANCHOR - get label data
-names = keys(boxes) |> collect
+imgnames = keys(boxes) |> collect
 persondir = raw"D:\training_set\personmasks"
 
 yiter = mapobs(names) do name
@@ -88,7 +88,7 @@ end
 
 
 const imgdir = raw"D:\training_set\small"
-xiter = mapobs(names) do name
+xiter = mapobs(imgnames) do name
 
     img_name = name * ".jpg"
     img = joinpath(imgdir, img_name) |> Images.load

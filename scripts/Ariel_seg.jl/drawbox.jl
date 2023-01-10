@@ -5,6 +5,7 @@ using ImageView
 
 function getimgencode(imgname, names = names)
 
+    imgdir = raw"D:\training_set\small"
     if isfile(imgname)
 
         img = load(imgname)
@@ -12,13 +13,13 @@ function getimgencode(imgname, names = names)
         enc = ImagePreprocessing()
         encimg = encode(enc, Training(), FastVision.Image{2}(), img)
         imgx = Flux.unsqueeze(encimg, 4)
-    elseif imgname ∈ names
+    elseif imgname ∈ imgnames
 
-        imgid = findfirst(names .== imgname)
+        imgid = findfirst(imgnames .== imgname)
         imgx = getobs(xiter, imgid)
         imgx = Flux.unsqueeze(imgx, 4)
         
-        img = joinpath(imgdir, imgname * ".jpg") |> load
+        img = joinpath(imgdir, imgname * ".jpg") |> Images.load
     else
 
         error("Image not found")
@@ -65,7 +66,6 @@ function drawbox(model, imgname, xiter = xiter; threshold = .5, names = names)
 
 end
 
-
 function drawboxView(img, preds::Vector)
 
     guidict = imshow(img)
@@ -77,7 +77,6 @@ function drawboxView(img, preds::Vector)
     guidict
 end
 
-
 function drawboxview(model::Chain, imgname::String)
 
     img, imgx = getimgencode(imgname)
@@ -88,9 +87,17 @@ function drawboxview(model::Chain, imgname::String)
 end
 
 
+function getdetection(model::Chain, imgname::AbstractString)
+    _, imgx = getimgencode(imgname)
+
+    preds = getprediction(model, imgx)
+    nonMaxSupression!(preds, .3)
+
+    preds
+end
+
 
 drawboxview(model, "002")
-
 
 drawbox(model, "175"; threshold = .5)
 drawbox(model, "001"; threshold = .5)
