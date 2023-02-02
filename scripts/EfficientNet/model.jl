@@ -18,7 +18,7 @@ function centernet(num_classes, num_filters)
 
     # output_size = floor(input_size/4)
 
-    resbone = Metalhead.EfficientNet(:b4).layers[1:end-1]
+    resbone = Metalhead.ConMixer(:b4).layers[1:end-1]
 
     # C5 = resbone.layers[end]
     # x = Chain(C5, Dropout(0.5))
