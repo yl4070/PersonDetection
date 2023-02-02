@@ -31,7 +31,6 @@ function trainevidential(dl, model, nepoch = 20)
             x, y = x |> gpu, y |> gpu
             
             pos_idx = f32(y.heatmap .== 1)
-            clf_idx = sum(pos_idx, dims = 3)
             
             gs = gradient(ps) do 
                 
@@ -40,10 +39,12 @@ function trainevidential(dl, model, nepoch = 20)
                 # yhat_pos = f32(ŷ[3] .> .3)
 
                 Lk = loss_k(ŷ[1], y.heatmap, pos_idx)
-                Loff = pointsloss(ŷ[3], y.off, clf_idx)
-                Lsz = pointsloss(ŷ[2], y.size, clf_idx)
+                Lsz = pointsloss(ŷ[2], y.size, pos_idx)
+                Loff = pointsloss(ŷ[3], y.off, pos_idx)
+                Lclsheat = loss_k(sum(ŷ[4]; dims = 3), y.heatmap, pos_idx)
+                Lclass = pointsentropy(ŷ[4], y.class, pos_idx)
 
-                loss = Lk + Loff + .1Lsz 
+                loss = Lk + Loff + .1Lsz + Lclass + Lclsheat
                 loss 
             end
             

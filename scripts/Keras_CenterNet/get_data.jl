@@ -34,11 +34,11 @@ end
 Yxyc(v, h, pv, ph) = exp(-((v-pv)^2 + (h-ph)^2)/2)
 function heatmap(boxes)
 
-    Y = zeros(V, H, 20)
+    Y = zeros(V, H, 1)
 
-    for (box, id) in boxes
+    for (box, _) in boxes
 
-        Y′ = zeros(V, H, 20)
+        Y′ = zeros(V, H, 1)
         p̃ = centerize(box)
         
         # p̃i_range = min(p̃[1]-5, 1):max(p̃[1]+5, V)
@@ -48,7 +48,7 @@ function heatmap(boxes)
         p̃j_range = max(p̃[2]-5, 1):min(p̃[2]+5, H)
 
         for i in p̃i_range, j in p̃j_range
-            Y′[i, j, id] = Yxyc(i, j, p̃[1], p̃[2])
+            Y′[i, j, 1] = Yxyc(i, j, p̃[1], p̃[2])
         end
 
         Y = max.(Y, Y′)
@@ -87,7 +87,7 @@ function get_data(bbox_dict, imgdir; sz = 256)
 
         (off = expandtruth(pure_boxes, off, (V, H, 2)),
         size = expandtruth(pure_boxes, sizeL, (V, H, 2)),
-        # class = expandtruth(img_boxes, class, ( V, H, length(cat_ids))),
+        class = expandtruth(img_boxes, class, ( V, H, 20)),
         heatmap = heatmap(img_boxes))
     end
 

@@ -33,3 +33,24 @@ function pointsloss(preds, targets, pos_inds)
     sum(tot) / n
 end
 
+function _segmentationloss(ypreds, ys; kwargs...)
+
+    sz_preds = size(ypreds)
+    ypreds = reshape(ypreds, :, sz_preds[end - 1], sz_preds[end])
+    sz = size(ys)
+    ys = reshape(ys, :, sz[end - 1], sz[end])
+    Flux.Losses.logitcrossentropy(ypreds, ys; dims = 2, kwargs...)
+end
+
+function pointsentropy(preds, targets, pos_inds)
+
+    loss = _segmentationloss(preds, targets)
+    
+    n = sum(pos_inds)
+    n = n == 0 ? 1 : n
+    tot = loss * pos_inds 
+
+    sum(tot) / n
+end
+
+
