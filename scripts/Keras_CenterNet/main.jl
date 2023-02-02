@@ -25,8 +25,9 @@ include("losses.jl")
 include("model.jl")
 include("training.jl")
 
-const V, H = 73, 73 # REVIEW - check output size later.
 const SIZE = 512
+const RATIO = 3.5 
+const V, H = (SIZE, SIZE) .÷ RATIO # REVIEW - check output size later.
 
 CUDA.allowscalar(false)
 
@@ -34,14 +35,14 @@ function main(img_dir, lbl_dir)
     nepoch = 80
     num_filters = 256
     nclass = 20
-    img_size = 512
+    img_size = SIZE
 
     annotations, imgnames, info_dict = get_info(img_dir, lbl_dir)
     bboxes_dict = getbbox(annotations, imgnames, info_dict; sz = img_size)
 
     xiter, yiter = get_data(bboxes_dict, img_dir, sz = img_size) 
 
-    model = centernet(nclass, num_filters)
+    model = centernet(nclass, img_size)
     dl = dataloader(xiter, yiter)
 
     trainevidential(dl, model, nepoch)
@@ -58,7 +59,3 @@ main(img_dir, lbl_dir)
 # size(y.heatmap)
 # size(x) check this
 # size(y.heatmap)
-
-64x64x20
-
-size(m[1])

@@ -2,9 +2,10 @@
 
 # const V, H = 128, 128 # REVIEW - check output size later.
 
-Base.:
+Base.:÷(a, b::AbstractFloat) = round(a / b) |> Int
 
-function cal_offset(v, h, vw, hw, R = 4)
+
+function cal_offset(v, h, vw, hw, R = RATIO)
     p = [v + vw÷2, h + hw÷2]
         
     p̃ = p .÷ R
@@ -12,11 +13,11 @@ function cal_offset(v, h, vw, hw, R = 4)
 end
 
 # cal_offset(boxes["006"][1]...)
-function centerize(box, R = 4)
+function centerize(box, R = RATIO)
     v, h, vw, hw = box
     p = [v + vw÷2, h + hw÷2]
 
-    check_bound.(p .÷ R; sz = 64)
+    check_bound.(p .÷ R; sz = SIZE ÷ R)
 end
 
 function expandtruth(boxes, ys, dim)
