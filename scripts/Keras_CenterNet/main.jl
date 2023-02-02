@@ -25,13 +25,16 @@ include("losses.jl")
 include("model.jl")
 include("training.jl")
 
+const V, H = 73, 73 # REVIEW - check output size later.
+const SIZE = 512
+
 CUDA.allowscalar(false)
 
 function main(img_dir, lbl_dir)
     nepoch = 80
     num_filters = 256
     nclass = 20
-    img_size = 256
+    img_size = 512
 
     annotations, imgnames, info_dict = get_info(img_dir, lbl_dir)
     bboxes_dict = getbbox(annotations, imgnames, info_dict; sz = img_size)

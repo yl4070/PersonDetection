@@ -72,6 +72,6 @@ function trainevidential(dl, model, nepoch = 20)
     end
 
     model = model |> cpu
-    @save "scripts/Keras_CenterNet/modellog_$mod_dt/model$data-full_$mod_dt.bson" model
+    @save "D:/Github/PersonDetection/scripts/Keras_CenterNet/modellog_$mod_dt/model$data-full_$mod_dt.bson" model
     # @save "modelpascal_all_nig_$mod_dt.bson" model
 end

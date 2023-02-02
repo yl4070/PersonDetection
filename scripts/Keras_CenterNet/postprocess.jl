@@ -45,7 +45,6 @@ end
 
 
 # Calculates IoU score (overlapping rate)
-
 function ioumatch(bbox1, bbox2)
     r1 = bbox1.x + bbox1.w
     l1 = bbox1.x

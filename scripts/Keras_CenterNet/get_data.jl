@@ -1,8 +1,8 @@
 
 
 # const V, H = 128, 128 # REVIEW - check output size later.
-const V, H = 64, 64 # REVIEW - check output size later.
 
+Base.:
 
 function cal_offset(v, h, vw, hw, R = 4)
     p = [v + vw÷2, h + hw÷2]
