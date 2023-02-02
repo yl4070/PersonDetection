@@ -1,4 +1,4 @@
-function dataloader(xiter, yiter, batchsize = 8, collate = true, shuffle = true, partial = false, parallel = false)
+function dataloader(xiter, yiter, batchsize = 6, collate = true, shuffle = true, partial = false, parallel = false)
     DataLoader((xiter, yiter), batchsize = batchsize, collate = collate, shuffle = shuffle, partial = partial, parallel = parallel, rng=MersenneTwister(2))
 end
 
@@ -6,7 +6,7 @@ end
 function trainevidential(dl, model, nepoch = 20)
     dt = replace(string(now()),r":|\."=>"-")
     data = "pascal"
-    model_nm = "Keras_Res18"
+    model_nm = "ConvMixer"
     mod_dt = model_nm*"_"*dt
 
     # logger = TBLogger("TensorBoardLogs/pascal_nig_20230119_2230", min_level=Logging.Info)

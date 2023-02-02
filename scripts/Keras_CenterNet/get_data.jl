@@ -1,5 +1,3 @@
-
-
 # const V, H = 128, 128 # REVIEW - check output size later.
 
 Base.:÷(a, b::AbstractFloat) = round(a / b) |> Int

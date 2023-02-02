@@ -1,4 +1,4 @@
-using Flux
+# using Flux
 
 # define split util
 struct Split{T}
@@ -9,10 +9,10 @@ Split(paths...) = Split(paths)
 Flux.@functor Split
 (m::Split)(x) = map(f -> f(x), m.paths)
 
-function centernet(num_classes, input_size)
+function centernet(num_classes, num_filters, input_size)
 
     # num_classes = 20
-    input_size = 256
+    # input_size = 256
     # freeze_bn = true
     # num_filters = 256
     # output_size = floor(input_size/4)
