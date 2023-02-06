@@ -70,7 +70,7 @@ function get_data(bbox_dict, imgdir; sz = 256)
     yiter = mapobs(imgnames) do iname
 
         img_boxes = map(bbox_dict[iname]) do b
-            b.bbox, b.cat_id
+            b.bbox, b.class
         end
 
         pure_boxes = map(img_boxes) do b
@@ -85,10 +85,10 @@ function get_data(bbox_dict, imgdir; sz = 256)
             b[1][3:4]
         end
 
+        classes = split("person, bird, cat, cow, dog, horse, sheep, aeroplane, bicycle, boat, bus, car, motorbike, train, bottle, chair, diningtable, pottedplant, sofa, tvmonitor", ", ")
         class = map(img_boxes) do b
-            Flux.onehot(b[2], 1:20)
+            Flux.onehot(b[2], classes)
         end
-
         (off = expandtruth(pure_boxes, off, (V, H, 2)),
         size = expandtruth(pure_boxes, sizeL, (V, H, 2)),
         class = expandtruth(pure_boxes, class, (V, H, 20)),

@@ -34,18 +34,17 @@ const V, H = (SIZE, SIZE) .÷ RATIO # REVIEW - check output size later.
 
 CUDA.allowscalar(false)
 
-function main(img_dir, lbl_dir)
+function main(img_dir, xml_lbl_dir)
     nepoch = 300
     num_filters = 256
     nclass = 20
     img_size = SIZE
 
-    annotations, imgnames, info_dict = get_info(img_dir, lbl_dir)
-    bboxes_dict = getbbox(annotations, imgnames, info_dict; sz = img_size)
+    # annotations, imgnames, info_dict = get_info(img_dir, lbl_dir)
+    bboxes_dict = read_xml(xml_lbl_dir, sz = img_size)
 
     xiter, yiter = get_data(bboxes_dict, img_dir, sz = img_size) 
-    findall(x -> x == "000017.jpg", xiter.data)
-    # xiter.data[27]
+
     model = centernet(nclass, num_filters, img_size)
     dl = dataloader(xiter, yiter)
 
@@ -56,9 +55,10 @@ end
 # xml_img_dir = raw"/home/sr8685/ObjectDetection/Datasets/swimcar/Pascal/Train/JPEGImages"
 # main(xml_img_dir, xml_lbl_dir)
 
-const lbl_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\Datasets\train.json"
+# const lbl_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\Datasets\train.json"
 const img_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\Datasets\JPEGImages"
-main(img_dir, lbl_dir)
+const xml_lbl_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\test\Datasets"
+main(img_dir, xml_lbl_dir)
 
 # size(y.heatmap)
 # size(x) check this
