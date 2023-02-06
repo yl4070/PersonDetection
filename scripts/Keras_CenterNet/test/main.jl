@@ -45,8 +45,12 @@ function main(img_dir, xml_lbl_dir)
 
     xiter, yiter = get_data(bboxes_dict, img_dir, sz = img_size) 
 
+    trainset, testset = splitobs((xiter, yiter), at = .9, shuffle = true)
+
+    @save "testset.bson" testset
+
     model = centernet(nclass, num_filters, img_size)
-    dl = dataloader(xiter, yiter)
+    dl = dataloader(trainset...)
 
     trainevidential(dl, model, nepoch)
 end
