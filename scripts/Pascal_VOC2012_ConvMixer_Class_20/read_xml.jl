@@ -15,7 +15,6 @@ end
 parseFloat(x) = parse(Float32, x)
 
 Base.round(x::String) = parse(Float64, x) |> round
-
 Base.ceil(x::String) = parse(Float64, x) |> ceil
 
 function read_xml(xml_lbl_dir; sz=256)

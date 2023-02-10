@@ -56,16 +56,19 @@
 spack load openmpi@4.0.5 /sa66g3e
 
 # The code you actually need to run goes here
+export JULIA_CUDA_MEMORY_POOL=none
+export FLUXMPI_DISABLE_CUDAMPI_SUPPORT=true
 export PATH="$PATH:~/julia-1.8.5/bin"
 export JULIA_MPI_BINARY="system"
 export JULIA_MPIEXEC="srun"
 
 # julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -e 'ENV["JULIA_MPI_BINARY"]="system";ENV["JULIA_MPIEXEC"]="srun"; using Pkg; Pkg.build("MPI"; verbose=true)'
-julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -e 'using Pkg; Pkg.build("MPI"; verbose=true)'
+julia --project="/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20" -e 'using Pkg; Pkg.build("MPI"; verbose=true)'
 # mpiexecjl --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -n 1 /home/sr8685/julia-1.8.5/bin/julia --threads=36 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
-mpiexecjl --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -n $SLURM_CPUS_PER_TASK /home/sr8685/julia-1.8.5/bin/julia --threads=20 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
+mpiexecjl --project="/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20" -n $SLURM_CPUS_PER_TASK ~/julia-1.8.5/bin/julia --threads=20 /home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
 # srun -n 1 /home/sr8685/julia-1.8.5/bin/julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" --threads=36 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
 
 # julia --threads=auto /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class/main.jl
 # srun hostname
 # srun sleep 60
+

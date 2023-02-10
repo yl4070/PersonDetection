@@ -1,12 +1,11 @@
-# using Pkg
+using Pkg
 # Pkg.activate("/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class")
 
 begin
-    using BSON: @save
+    using BSON: @load
     using CUDA
     using Dates
     using EzXML
-    # using EvidentialFlux
     using FastAI, FastVision
     using FLoops
     using Flux
@@ -16,6 +15,7 @@ begin
     using Metalhead
     using MLUtils
     using ProgressMeter
+    using JLD2
     using Random
     # using SpecialFunctions
     using Statistics
@@ -26,40 +26,43 @@ begin
     FluxMPI.Init(verbose=true)
 end
 
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/getlbl.jl")
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/get_data.jl")
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/losses.jl")
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/model.jl")
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/training.jl")
-include(raw"/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/read_xml.jl")
+include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/get_data.jl")
+include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/losses.jl")
+include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/hcenter.jl")
+include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/training.jl")
+include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/read_xml.jl")
 
-const SIZE = 256
-const RATIO = 3.5555555555
-const V, H = (SIZE, SIZE) .÷ RATIO # REVIEW - check output size later.
+# const SIZE = 256
+# const RATIO = 3.5555555555
+# const V, H = (SIZE, SIZE) .÷ RATIO # REVIEW - check output size later.
 
 CUDA.allowscalar(false)
 
-function main(img_dir, xml_lbl_dir)
-    nepoch = 300
-    num_filters = 256
-    nclass = 20
-    img_size = SIZE
+function main()
 
-    # annotations, imgnames, info_dict = get_info(img_dir, lbl_dir)
-    # bboxes_dict = getbbox(annotations, imgnames, info_dict; sz = img_size)
-    bboxes_dict = read_xml(xml_lbl_dir, sz = img_size)
+    imsize = 512
 
-    xiter, yiter = get_data(bboxes_dict, img_dir, sz = img_size) 
+    # bboxes_dict = read_xml(xml_lbl_dir, sz = imsize)
+    @load "bbox_dict.bson" bboxes_dict
+    ids = ["x$i" for i in 1:17125]
 
-    # trainset, testset = splitobs((xiter, yiter), at = .9, shuffle = true)
+    f = jldopen("xs.jld2", "r")
+    xiter = mapobs(ids) do i
+        f[i]
+    end
 
-    # @save "testset.bson" testset
+    yiter1 = get_ydata(bboxes_dict, imsize, 37)
+    yiter2 = get_ydata(bboxes_dict, imsize, 73)
+    yiter3 = get_ydata(bboxes_dict, imsize, 146)
 
-    model = centernet(nclass, num_filters, img_size)
-    dl = dataloader(xiter, yiter)
+    trd = TrData(xiter, yiter1, yiter2, yiter3)
 
-    # @info "local rank: $(local_rank())"
-    trainevidential(dl, model, nepoch)
+    model = get_hcenter()
+
+    dl = dataloader(trd)
+
+    trainevidential(dl, model)
+    close(f)
 end
 
 # xml_lbl_dir = raw"/home/sr8685/ObjectDetection/Datasets/swimcar/Pascal/Train/Annotations"
@@ -67,10 +70,23 @@ end
 # main(xml_img_dir, xml_lbl_dir)
 
 # const lbl_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\Datasets\train.json"
-const img_dir = raw"/home/sr8685/PersonDetection/scripts/Datasets/VOCdevkit/VOC2012/JPEGImages"
-const xml_lbl_dir = raw"/home/sr8685/PersonDetection/scripts/Datasets/VOCdevkit/VOC2012/Annotations"
-main(img_dir, xml_lbl_dir)
+# const img_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/JPEGImages"
+const xml_lbl_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/Annotations"
+main()
 
-# size(y.heatmap)
-# size(x) check this
-# size(y.heatmap)
+
+# @save "bbox_dict.bson" bboxes_dict
+
+# xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
+
+# f = jldopen("xs.jld2", "w")
+# for i in 1:length(xdat)
+
+#     write(f, "x$i", getobs(xdat, i))
+# end
+# close(f)
+
+# dat, i_st = iterate(trd)
+
+
+
