@@ -48,8 +48,6 @@ function trainevidential(dl, model)
 
         x, y1, y2, y3 = x |> gpu, y1 |> gpu, y2 |> gpu, y3 |> gpu
 
-        
-
         loss, gs = Flux.withgradient(model) do m
             
             ŷ = m(x)
@@ -81,7 +79,7 @@ function trainevidential(dl, model)
 
                 d = replace(string(now()),r":|\."=>"-")
 
-                @save joinpath(folder_path, "model-$model_nm-$(d)_step$s.bson") model
+                BSON.@save joinpath(folder_path, "model-$model_nm-$(d)_step$s.bson") model
             end
         end
 
@@ -93,7 +91,7 @@ function trainevidential(dl, model)
 
     model = model |> cpu
     d = replace(string(now()),r":|\."=>"-")
-    @save "/home/yl4070/PersonDetection/scripts/modellog_$mod_dt/model-$model_nm-$(d)_full.bson" model
+    BSON.@save "/home/yl4070/PersonDetection/scripts/modellog_$mod_dt/model-$model_nm-$(d)_full.bson" model
 
 end
 

@@ -85,12 +85,16 @@ function get_hcenter(nh = 256)
     m
 end
 
-# x = Flux.unsqueeze(x, dims = 4)
+# x = rand(Float32, 256, 256, 3, 1)
+
+# # x = Flux.unsqueeze(x, dims = 4)
 
 # y = model(x)
 
 
-
+# y[1][1]
+# y[2][1][1]
+# y[2][2][1]
 
 
 

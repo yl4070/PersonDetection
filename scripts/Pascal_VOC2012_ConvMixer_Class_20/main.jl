@@ -2,7 +2,7 @@ using Pkg
 # Pkg.activate("/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class")
 
 begin
-    using BSON: @load
+    import BSON
     using CUDA
     using Dates
     using EzXML
@@ -41,13 +41,13 @@ CUDA.allowscalar(false)
 
 function main()
 
-    imsize = 512
+    imsize = 256
 
     # bboxes_dict = read_xml(xml_lbl_dir, sz = imsize)
-    @load "bbox_dict.bson" bboxes_dict
+    BSON.@load "bbox_dict.bson" bboxes_dict
 
     # imglist = keys(bboxes_dict) |> collect
-    @load "imglist.bson" imglist
+    imglist = JLD2.load("imglist.jld2", "imglist")
 
     ids = ["x$i" for i in 1:17125]
 
@@ -56,9 +56,9 @@ function main()
         f[i]
     end
 
-    yiter1 = get_ydata(imglist, bboxes_dict, imsize, 37)
-    yiter2 = get_ydata(imglist, bboxes_dict, imsize, 73)
-    yiter3 = get_ydata(imglist, bboxes_dict, imsize, 146)
+    yiter1 = get_ydata(imglist, bboxes_dict, imsize, 18)
+    yiter2 = get_ydata(imglist, bboxes_dict, imsize, 36)
+    yiter3 = get_ydata(imglist, bboxes_dict, imsize, 72)
 
     trd = TrData(xiter, yiter1, yiter2, yiter3)
 
