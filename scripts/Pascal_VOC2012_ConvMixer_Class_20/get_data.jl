@@ -60,14 +60,14 @@ expandim(x, d = 3) = Flux.unsqueeze(x, d)
 
 # ANCHOR - get label data
 
-function get_ydata(bbox_dict, imsize, V)
+function get_ydata(imglist, bbox_dict, imsize, V)
 
-    imgnames = keys(bbox_dict) |> collect
+    # imgnames = keys(bbox_dict) |> collect
 
     H = V    
     ratio = imsize / H
 
-    yiter = mapobs(imgnames) do iname
+    yiter = mapobs(imglist) do iname
 
         classes = split("person, bird, cat, cow, dog, horse, sheep, aeroplane, bicycle, boat, bus, car, motorbike, train, bottle, chair, diningtable, pottedplant, sofa, tvmonitor", ", ")
             
@@ -98,13 +98,13 @@ function get_ydata(bbox_dict, imsize, V)
     yiter
 end
 
-function get_xdata(bbox_dict, imgdir; sz = 256)
+function get_xdata(imglist, imgdir; sz = 256)
         
     color0 = colorant"black"
 
-    imgnames = keys(bbox_dict) |> collect
+    # imgnames = keys(bbox_dict) |> collect
     
-    xiter = mapobs(imgnames) do img_name
+    xiter = mapobs(imglist) do img_name
 
         img = joinpath(imgdir, img_name) |> Images.load
         

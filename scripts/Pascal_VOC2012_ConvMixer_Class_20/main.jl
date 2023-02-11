@@ -21,10 +21,11 @@ begin
     using Statistics
     using TensorBoardLogger
     # using PaddedViews
-    using FluxMPI
     import Optimisers
-    FluxMPI.Init(verbose=true)
 end
+
+using FluxMPI
+FluxMPI.Init(verbose=true)
 
 include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/get_data.jl")
 include(raw"/home/yl4070/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/losses.jl")
@@ -44,6 +45,10 @@ function main()
 
     # bboxes_dict = read_xml(xml_lbl_dir, sz = imsize)
     @load "bbox_dict.bson" bboxes_dict
+
+    # imglist = keys(bboxes_dict) |> collect
+    @load "imglist.bson" imglist
+
     ids = ["x$i" for i in 1:17125]
 
     f = jldopen("xs.jld2", "r")
@@ -51,9 +56,9 @@ function main()
         f[i]
     end
 
-    yiter1 = get_ydata(bboxes_dict, imsize, 37)
-    yiter2 = get_ydata(bboxes_dict, imsize, 73)
-    yiter3 = get_ydata(bboxes_dict, imsize, 146)
+    yiter1 = get_ydata(imglist, bboxes_dict, imsize, 37)
+    yiter2 = get_ydata(imglist, bboxes_dict, imsize, 73)
+    yiter3 = get_ydata(imglist, bboxes_dict, imsize, 146)
 
     trd = TrData(xiter, yiter1, yiter2, yiter3)
 
@@ -75,18 +80,25 @@ const xml_lbl_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/Annotations"
 main()
 
 
+@save "imglist.bson" imglist
+
 # @save "bbox_dict.bson" bboxes_dict
 
 # xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
 
-# f = jldopen("xs.jld2", "w")
-# for i in 1:length(xdat)
 
-#     write(f, "x$i", getobs(xdat, i))
-# end
-# close(f)
+xdat = get_xdata(imglist, img_dir; sz = 512)
+
+using ProgressMeter
+
+f = jldopen("xs.jld2", "w")
+@showprogress for i in 1:length(xdat)
+
+    write(f, "x$i", getobs(xdat, i))
+end
+close(f)
 
 # dat, i_st = iterate(trd)
 
-
+xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
 
