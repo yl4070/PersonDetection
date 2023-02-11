@@ -76,29 +76,29 @@ end
 
 # const lbl_dir = raw"D:\Github\PersonDetection\scripts\Keras_CenterNet\Datasets\train.json"
 # const img_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/JPEGImages"
-const xml_lbl_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/Annotations"
+# const xml_lbl_dir = "/home/yl4070/PersonDetection/VOCdevkit/VOC2012/Annotations"
 main()
 
 
-@save "imglist.bson" imglist
+# @save "imglist.bson" imglist
 
-# @save "bbox_dict.bson" bboxes_dict
+# # @save "bbox_dict.bson" bboxes_dict
+
+# # xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
+
+
+# xdat = get_xdata(imglist, img_dir; sz = 512)
+
+# using ProgressMeter
+
+# f = jldopen("xs.jld2", "w")
+# @showprogress for i in 1:length(xdat)
+
+#     write(f, "x$i", getobs(xdat, i))
+# end
+# close(f)
+
+# # dat, i_st = iterate(trd)
 
 # xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
-
-
-xdat = get_xdata(imglist, img_dir; sz = 512)
-
-using ProgressMeter
-
-f = jldopen("xs.jld2", "w")
-@showprogress for i in 1:length(xdat)
-
-    write(f, "x$i", getobs(xdat, i))
-end
-close(f)
-
-# dat, i_st = iterate(trd)
-
-xdat = get_xdata(bboxes_dict, img_dir; sz = 512)
 
