@@ -2,7 +2,7 @@
 # NOTE the -l flag!
 
 # The name of your job; be descriptive
-#SBATCH --job-name=Debug
+#SBATCH --job-name=Debuim
 
 # Where to save the output and error messages for your job?
 # %x will fill in your job name, %j will fill in your job ID
@@ -34,10 +34,7 @@
 # When your job runs successfully, switch to tier3.
 # We reserve the right to kill jobs running on debug without warning if we need
 # to debug with or train a researcher.
-# SBATCH --gpus-per-task=1
-# SBATCH --gpu-bind=single:1
 #SBATCH --partition=debug
-# GresTypes=gpu
 #SBATCH --gres=gpu:a100:2
 
 # Load your software using spack
@@ -56,14 +53,16 @@
 spack load openmpi@4.0.5 /sa66g3e
 
 # The code you actually need to run goes here
+export JULIA_CUDA_MEMORY_POOL=none
+export FLUXMPI_DISABLE_CUDAMPI_SUPPORT=true
 export PATH="$PATH:~/julia-1.8.5/bin"
 export JULIA_MPI_BINARY="system"
 export JULIA_MPIEXEC="srun"
 
 # julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -e 'ENV["JULIA_MPI_BINARY"]="system";ENV["JULIA_MPIEXEC"]="srun"; using Pkg; Pkg.build("MPI"; verbose=true)'
-julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -e 'using Pkg; Pkg.build("MPI"; verbose=true)'
+julia --project="/home/yl4070/Obj_simple/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20" -e 'using Pkg; Pkg.build("MPI"; verbose=true)'
 # mpiexecjl --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -n 1 /home/sr8685/julia-1.8.5/bin/julia --threads=36 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
-mpiexecjl --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" -n $SLURM_CPUS_PER_TASK /home/sr8685/julia-1.8.5/bin/julia --threads=20 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
+mpiexecjl --project="/home/yl4070/Obj_simple/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20" -n 2 /home/yl4070/julia-1.8.5/bin/julia --threads=20 /home/yl4070/Obj_simple/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
 # srun -n 1 /home/sr8685/julia-1.8.5/bin/julia --project="/home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class" --threads=36 /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class_20/main.jl
 
 # julia --threads=auto /home/sr8685/PersonDetection/scripts/Pascal_VOC2012_ConvMixer_Class/main.jl
